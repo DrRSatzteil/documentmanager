@@ -66,13 +66,12 @@ appstore:
 	"appinfo" \
 	"css" \
 	"img" \
+	"js" \
 	"lib" \
 	"templates" \
 	"vendor" \
 	"COPYING" \
 	"CHANGELOG.md" \
-	"js/script.js" \
-	"js/handlebars.js" \
 	$(appstore_build_directory)
 
 .PHONY: test
