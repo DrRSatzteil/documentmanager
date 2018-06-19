@@ -1,0 +1,47 @@
+
+
+<!--<a class="app-content-list-item"
+   ng-repeat="organisation in ctrl.organisations"
+   <span>{{organisation.name}}</span>
+   href="#"
+</a>
+
+
+<a class="app-content-list-item"
+   ng-repeat="contact in ctrl.filteredContacts = (ctrl.contactList | contactGroupFilter:ctrl.routeParams.gid | localeOrderBy:ctrl.sortBy | filter:query | limitTo:ctrl.limitTo ) as filtered track by contact.uid()"
+   contact data="contact"
+   href="#/{{ctrl.routeParams.gid}}/{{contact.uid()}}"
+   ng-class="{active: contact.uid() === ctrl.getSelectedId()}">
+</a>
+<div ng-show="!ctrl.filteredContacts.length && !ctrl.loading && ctrl.searchTerm !== ''">
+        <div id="emptycontent" class="emptycontent-search">
+	        <div class="icon-search"></div>
+		<h2>{{ctrl.t.emptySearch}}</h2>
+	</div>
+</div>
+
+<li ng-repeat="organisaton in organisationList.organisations">
+            <span>{{organisaton.name}}</span>
+        </li>
+        
+-->
+
+
+
+<a class="app-content-list-item"
+   ng-repeat="organisation in ctrl.organisations"
+   {{organisation.name}}
+   href="#?name={{organisation.name}}">
+</a>
+<!--<a class="app-content-list-item"
+   ng-repeat="organisation in ctrl.organisations"
+   organisation data="organisation"
+   href="#/{{ctrl.routeParams.gid}}/{{organisation.uid()}}"
+   ng-class="{active: contact.uid() === ctrl.getSelectedId()}">
+</a>-->
+<div ng-show="!ctrl.organisations.length && !ctrl.loading && ctrl.searchTerm !== ''">
+        <div id="emptycontent" class="emptycontent-search">
+	        <div class="icon-search"></div>
+		<h2>{{ctrl.t.emptySearch}}</h2>
+	</div>
+</div>

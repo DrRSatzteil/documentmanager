@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <id>documentmanager</id>
+    <name>Document Manager</name>
+    <summary>App for organising documents</summary>
+    <description><![CDATA[This is a test App]]></description>
+    <version>0.0.3</version>
+    <licence>agpl</licence>
+    <author mail="thomas_lauterbach@arcor.de">Thomas Lauterbach</author>
+    <namespace>DocumentManager</namespace>
+    <category>office</category>
+    <bugs>https://drrsatzteil.de</bugs>
+    <dependencies>
+        <nextcloud min-version="12" max-version="14"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Document Manager</name>
+            <route>documentmanager.page.index</route>
+        </navigation>
+    </navigations>
+</info>
