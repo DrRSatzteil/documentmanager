@@ -3,16 +3,16 @@
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <id>documentmanager</id>
     <name>Document Manager</name>
-    <summary>App for organising documents</summary>
+    <summary>Simple Document Manager for Nextcloud</summary>
     <description><![CDATA[This is a test App]]></description>
     <version>0.0.3</version>
     <licence>agpl</licence>
-    <author mail="thomas_lauterbach@arcor.de">Thomas Lauterbach</author>
+    <author mail="lauterbachthomas@gmail.com">Thomas Lauterbach</author>
     <namespace>DocumentManager</namespace>
     <category>office</category>
-    <bugs>https://drrsatzteil.de</bugs>
+    <bugs>https://github.com/DrRSatzteil/documentmanager/issues</bugs>
     <dependencies>
-        <nextcloud min-version="12" max-version="14"/>
+        <nextcloud min-version="14" max-version="14"/>
     </dependencies>
     <navigations>
         <navigation>

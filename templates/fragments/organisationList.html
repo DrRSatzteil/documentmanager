@@ -26,13 +26,15 @@
         
 -->
 
-
-
 <a class="app-content-list-item"
-   ng-repeat="organisation in ctrl.organisations"
-   {{organisation.name}}
-   href="#?name={{organisation.name}}">
+   ng-repeat="org in ctrl.organisations"
+   organisation data="org"
+   href="#name={{org.name}}"
+   ng-class="{active: false}">
 </a>
+<!--<li ng-repeat="org in ctrl.organisations">
+    <organisation data="org"></organisation>
+</li>-->
 <!--<a class="app-content-list-item"
    ng-repeat="organisation in ctrl.organisations"
    organisation data="organisation"

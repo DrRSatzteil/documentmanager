@@ -1,12 +1,6 @@
 angular.module('documentManagerApp')
-.controller('organisationlistCtrl', function() {
-    
-	var ctrl = this;
-	
-	
-
-	/**ctrl.organisations = DocumentService.loadAll();*
- /**= [{name:'AOK'}, {name:'Zurich'}, {name:'Mieterverein'}]; // the displayed organisations list*/
-
-
-});
+	.controller('organisationlistCtrl', function(DocumentService) {
+		var ctrl = this;
+		ctrl.organisations = [];
+		DocumentService.getAllOrganisations(ctrl.organisations);
+	});

@@ -1,5 +1,4 @@
-<img class="app-content-list-item-icon organisation__icon" ng-show="ctrl.organisation.logo()!==undefined" data-ng-src="{{ctrl.organisation.logo()}}" />
-<div class="app-content-list-item-icon organisation__icon" ng-show="ctrl.organisation.logo()===undefined" ng-style="{'background-color': (ctrl.organisation.uid() | organisationColor) }">{{ ctrl.organisation.displayName() | firstCharacter }}</div>
-<div class="app-content-list-item-failed icon-error" tooltip-placement="auto left" ng-if="ctrl.organisation.failedProps.length>0" uib-tooltip="{{ ctrl.t.errorMessage }}"></div>
-<div class="app-content-list-item-line-one">{{ ctrl.getName() | newOrganisation }}</div>
-<div class="app-content-list-item-line-two" ng-if="ctrl.organisation.email()">{{ctrl.organisation.email()}}</div>
+<img class="app-content-list-item-icon organisation__icon" ng-show="ctrl.url()!==undefined" ng-src="http://logo.clearbit.com/{{ctrl.url()}}" />
+<div class="app-content-list-item-icon organisation__icon" ng-show="ctrl.url()===undefined" ng-style="{'background-color': (ctrl.id() | organisationColor) }">{{ ctrl.name() | firstCharacter }}</div>
+<div class="app-content-list-item-line-one">{{ ctrl.name() | newOrganisation }}</div>
+<div class="app-content-list-item-line-two" ng-if="ctrl.email()">{{ctrl.email()}}</div>

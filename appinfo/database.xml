@@ -58,6 +58,23 @@
                 <notnull>true</notnull>
                 <default></default>
             </field>-->
+            
+   <!--         CREATE TABLE Document (
+	id integer PRIMARY KEY AUTOINCREMENT,
+	title string,
+	organisation integer,
+	user_id text,
+	date date,
+	author string
+);
+
+CREATE TABLE Organisation (
+	id integer PRIMARY KEY AUTOINCREMENT,
+	logo blob,
+	email string,
+	url string
+);
+-->
         </declaration>
     </table>
 </database>

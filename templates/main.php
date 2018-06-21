@@ -1,19 +1,16 @@
 <?php
-script('documentmanager', 'angular.min');
-script('documentmanager', 'angular-route.min');
+// angular + components
+script('documentmanager', 'vendor/angular/angular.min');
+script('documentmanager', 'vendor/angular-route/angular-route.min');
 
-script('documentmanager', 'setup');
+// compiled version of app javascript
+script('documentmanager', 'public/script');
 
-script('documentmanager', 'service/documentService');
-script('documentmanager', 'components/facetList/facetList_controller');
-script('documentmanager', 'components/facetList/facetList_directive');
-script('documentmanager', 'components/organisationList/organisationList_controller');
-script('documentmanager', 'components/organisationList/organisationList_directive');
-script('documentmanager', 'components/loadDocumentsButton/loadDocumentsButton_controller');
-script('documentmanager', 'components/loadDocumentsButton/loadDocumentsButton_directive');
-
+// all styles
 style('documentmanager', 'style');
 ?>
+
+
 
 <div id="app" ng-app="documentManagerApp">
 	
