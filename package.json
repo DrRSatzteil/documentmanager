@@ -50,7 +50,6 @@
     "underscore": "^1.9.1"
   },
   "dependencies": {
-    "angular": "^1.7.2",
-    "angular-route": "^1.7.2"
+    "angular": "^1.7.2"
   }
 }

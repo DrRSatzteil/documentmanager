@@ -11,8 +11,5 @@
     ],
     "require": {
         "smalot/pdfparser": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^6.5"
     }
 }
