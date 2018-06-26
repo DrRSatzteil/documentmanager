@@ -1,13 +1,12 @@
 <?php
 namespace OCA\DocumentManager\Service;
 
-use Exception;
-
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\AppFramework\Http\DataResponse;
 
-use OCA\DocumentManager\Db\Document;
-use OCA\DocumentManager\Db\DocumentMapper;
+use OCA\DocumentManager\Database\Document;
+use OCA\DocumentManager\Database\DocumentMapper;
 
 
 class DocumentService {
@@ -15,53 +14,70 @@ class DocumentService {
     /** @var DocumentMapper */
     private $mapper;
 
-    public function __construct(DocumentMapper $mapper){
+    public function __construct(DocumentMapper $mapper) {
         $this->mapper = $mapper;
     }
 
-    public function findAll(string $userId): array {
-        return $this->mapper->findAll($userId);
-    }
-
-    private function handleException (Exception $e): void {
+    private function handleException ($e) {
         if ($e instanceof DoesNotExistException ||
             $e instanceof MultipleObjectsReturnedException) {
-            throw new DocumentNotFound($e->getMessage());
+            throw new NotFoundException($e->getMessage());
         } else {
             throw $e;
+        }
+    }
+    
+    public function findAll(string $userId): array {
+    	try {
+            return $this->mapper->findAll($userId);
+        } catch(Exception $e) {
+            $this->handleException($e);
         }
     }
 
     public function find($id, $userId) {
         try {
             return $this->mapper->find($id, $userId);
-
-        // in order to be able to plug in different storage backends like files
-        // for instance it is a good idea to turn storage related exceptions
-        // into service related exceptions so controllers and service users
-        // have to deal with only one type of exception
         } catch(Exception $e) {
             $this->handleException($e);
         }
     }
-
-    public function create($title, $organisation, $userId) {
-        $document = new Document();
-        $document->setTitle($title);
-        $document->setOrganisation($organisation);
-        $document->setUserId($userId);
-        return $this->mapper->insert($document);
-    }
-
-    public function update($id, $title, $organisation, $userId) {
+    
+    public function findByFileId($fileId, $userId) {
         try {
-            $document = $this->mapper->find($id, $userId);
-            $document->setTitle($title);
-            $document->setOrganisation($organisation);
-            return $this->mapper->update($document);
+            return $this->mapper->findByFileId($fileId, $userId);
         } catch(Exception $e) {
             $this->handleException($e);
         }
+    }
+
+    public function create(int $fileId, string $userId) {
+
+        	try {
+	        	$document = new Document();
+	    		$document->setFileId($fileId);
+	    		$document->setUserId($userId);
+	    		// Status 0 = Initial load
+	    		$document->setStatus(0);
+	    		return $this->mapper->insert($document);
+	    	} catch (Exception $e) {
+	    		$this->handleException($e);
+	    	}
+    }
+
+    public function update(int $id, int $fileId, string $title, string $userId,
+		int $organisationId, \DateTime $creationDate, int $status) {
+			try {
+	            $document = $this->mapper->find($id, $userId);
+				$document->setTitle($title);
+				$document->setFileId($fileId);
+				$document->setOrganisationId($organisationId);
+				$document->setCreationDate($creationDate);
+				$document->setStatus($status);
+	         	return $this->mapper->update($document);
+	         } catch(Exception $e) {
+	             $this->handleException($e);
+	         }
     }
 
     public function delete($id, $userId) {

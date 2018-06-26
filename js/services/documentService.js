@@ -33,7 +33,8 @@ angular.module('documentManagerApp')
 					for (var i = 0; i < response.data.length; i++) {
 				        var organisation = new Organisation();
 				        organisation.uniqueId = i;
-				        organisation.name = response.data[i].organisation;
+				        //organisation.name = response.data[i].organisation;
+						organisation.name = 'HP ' + i;
 				        if (organisation.name === undefined) {
 				            organisation.name = 'unknown';
 				        }

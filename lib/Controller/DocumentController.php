@@ -7,29 +7,31 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Controller;
 
 use OCA\DocumentManager\Service\DocumentService;
-use OCA\DocumentManager\Service\File\FileService;
+use OCA\DocumentManager\Service\DiscoveryService;
 
 class DocumentController extends Controller {
     
     /** @var DocumentService */
     private $documentService;
     
-    /** @var FileService */
-    private $fileService;
+    /** @var DiscoveryService */
+    private $discoveryService;
 
     /** @var string */
     private $userId;
 
     use Errors;
 
+	//TODO: Check if DataResponse needs to be created in a few methods
+	
     public function __construct($appName,
                                 IRequest $request,
                                 DocumentService $documentService,
-                                FileService $fileService,
+                                DiscoveryService $discoveryService,
                                 $userId) {
         parent::__construct($appName, $request);
         $this->documentService = $documentService;
-        $this->fileService = $fileService;
+        $this->discoveryService = $discoveryService;
         $this->userId = $userId;
     }
 
@@ -48,24 +50,18 @@ class DocumentController extends Controller {
             return $this->documentService->find($id, $this->userId);
         });
     }
-
+    
     /**
      * @NoAdminRequired
      */
-    public function create(string $title, string $organisation): DataResponse {
-        return new DataResponse($this->documentService->create($title, $organisation,
-            $this->userId));
-    }
-
-    /**
-     * @NoAdminRequired
-     */
-    public function update(int $id, string $title,
-                           string $organisation): DataResponse {
-        return $this->handleNotFound(function () use ($id, $title, $organisation) {
-            return $this->documentService->update($id, $title, $organisation, $this->userId);
-        });
-    }
+	public function update(int $id, int $fileId, string $title, 
+		int $organisationId, \DateTime $creationDate, int $status): DataResponse {
+			return $this->handleNotFound(function () use ($id, $fileId, $title, 
+			$organisationId, $creationDate, $status) {
+				return $this->documentService->update($id, $fileId, $title, $this->userId, 
+					$organisationId, $creationDate, $status);
+		});
+	}
 
     /**
      * @NoAdminRequired
@@ -80,7 +76,7 @@ class DocumentController extends Controller {
      * @NoAdminRequired
      */
     public function load(string $path): DataResponse {
-        return new DataResponse($this->fileService->loadDocuments($path));
+        return new DataResponse($this->discoveryService->discoverDocuments($path));
     }
 
 }

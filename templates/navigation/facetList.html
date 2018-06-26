@@ -3,6 +3,6 @@
 <li ng-repeat="group in ctrl.groups | orderBy: '-count'" group="group" ng-click="ctrl.setSelected(group.name)" ng-class="{active: group.name === ctrl.getSelected()}"></li>
 -->
 
-<li ng-repeat="facet in ctrl.facets">
+<li ng-repeat="facet in ctrl.facets track by facet.id">
 {{facet.title}}
 </li>

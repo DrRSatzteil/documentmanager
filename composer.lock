@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "smalot/pdfparser",
-            "version": "v0.12.0",
+            "version": "v0.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/smalot/pdfparser.git",
-                "reference": "7ef7ee5f0eccd494109f072a0ae3b10d5f8f27fd"
+                "reference": "f5e85c023491aecc88e8f6227536d60e1bb4a241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/7ef7ee5f0eccd494109f072a0ae3b10d5f8f27fd",
-                "reference": "7ef7ee5f0eccd494109f072a0ae3b10d5f8f27fd",
+                "url": "https://api.github.com/repos/smalot/pdfparser/zipball/f5e85c023491aecc88e8f6227536d60e1bb4a241",
+                "reference": "f5e85c023491aecc88e8f6227536d60e1bb4a241",
                 "shasum": ""
             },
             "require": {
@@ -36,7 +36,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "LGPLv3"
+                "LGPL-3.0"
             ],
             "authors": [
                 {
@@ -53,7 +53,7 @@
                 "pdf",
                 "text"
             ],
-            "time": "2018-03-16T17:38:34+00:00"
+            "time": "2018-06-23T08:43:13+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",

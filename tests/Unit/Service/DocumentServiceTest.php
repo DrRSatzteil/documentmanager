@@ -5,9 +5,10 @@ use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 
-use OCA\DocumentManager\Db\Document;
+use OCA\DocumentManager\Database\Document;
+use OCA\DocumentManager\Database\DocumentMapper;
 use OCA\DocumentManager\Service\DocumentService;
-use OCA\DocumentManager\Db\DocumentMapper;
+use OCA\DocumentManager\Service\NotFoundException;
 
 class DocumentServiceTest extends TestCase {
 
@@ -23,45 +24,68 @@ class DocumentServiceTest extends TestCase {
     }
 
     public function testUpdate() {
-        // the existing note
         $document = Document::fromRow([
             'id' => 3,
-            'title' => 'yo',
-            'organisation' => 'AOK'
+            'fileId' => 666,
+            'title' => 'Contract',
+            'organisationId' => 123,
+            'userId' => $this->userId,
+            'creationDate' => new \DateTime('1970-01-01'),
+            'status' => 1
         ]);
         $this->mapper->expects($this->once())
             ->method('find')
-            ->with($this->equalTo(3))
+            ->with($this->equalTo(3), $this->equalTo($this->userId))
             ->will($this->returnValue($document));
 
-        // the document when updated
-        $updatedDocument = Document::fromRow(['id' => 3]);
-        $updatedDocument->setTitle('title');
-        $updatedDocument->setOrganisation('organisation');
+		$id = 3;
+        $fileId = 555;
+        $title = 'Invoice';
+        $organisationId = 888;
+        $creationDate = new \DateTime('1970-01-02');
+        $status = 3;
+
+        $updatedDocument = Document::fromRow(['id' => $id, 'userId' => $this->userId]);
+        $updatedDocument->setFileId($fileId);
+        $updatedDocument->setTitle($title);
+        $updatedDocument->setOrganisationId($organisationId);
+        $updatedDocument->setCreationDate($creationDate);
+        $updatedDocument->setStatus($status);
         $this->mapper->expects($this->once())
             ->method('update')
             ->with($this->equalTo($updatedDocument))
             ->will($this->returnValue($updatedDocument));
 
-        $result = $this->service->update(3, 'title', 'organisation', $this->userId);
+        $result = $this->service->update($id, $fileId, $title, $this->userId, $organisationId, $creationDate, $status);
 
         $this->assertEquals($updatedDocument, $result);
     }
 
 
     /**
-     * @expectedException OCA\DocumentManager\Service\DocumentNotFound
+     * @expectedException OCA\DocumentManager\Service\NotFoundException
      */
     public function testUpdateNotFound() {
-        // test the correct status code if no document is found
+
+        $id = 5;
+        $fileId = 555;
+        $title = 'Invoice';
+        $organisationId = 888;
+        $creationDate = new \DateTime('1970-01-02');
+        $status = 3;
+
+        $document = Document::fromRow(['id' => $id, 'userId' => $this->userId]);
+        $document->setFileId($fileId);
+        $document->setTitle($title);
+        $document->setOrganisationId($organisationId);
+        $document->setCreationDate($creationDate);
+        $document->setStatus($status);
         $this->mapper->expects($this->once())
             ->method('find')
-            ->with($this->equalTo(3))
-            ->will($this->throwException(new DoesNotExistException('')));
+            ->with($this->equalTo($id), $this->userId)
+            ->will($this->throwException(new NotFoundException()));
 
-        $this->service->update(3, 'title', 'content', $this->userId);
+        $this->service->update($id, $fileId, $title, $this->userId, $organisationId, $creationDate, $status);
     }
-    
-    
 
 }
