@@ -45,7 +45,7 @@ build_tools_directory=$(CURDIR)/build/tools
 source_build_directory=$(CURDIR)/build/artifacts/source
 source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(CURDIR)/build/artifacts/appstore
-nextcloud_install_directory=$(CURDIR)/build/artifacts//documentmanager
+nextcloud_install_directory=/projects/nextcloud_server/apps/documentmanager
 appstore_old_build_directory=$(CURDIR)/build/artifacts/appstore_old
 appstore_package_name=$(appstore_build_directory)/$(app_name)
 npm=$(shell which npm 2> /dev/null)
@@ -177,6 +177,7 @@ test-deploy:
 	$(project_directory)/js/public \
 	$(project_directory)/js/vendor \
 	$(nextcloud_install_directory)/js
+	phpunit -c $(nextcloud_install_directory)/phpunit.xml
 	
 # Command for running JS and PHP tests. Works for package.json files in the js/
 # and root directory. If phpunit is not installed systemwide, a copy is fetched
