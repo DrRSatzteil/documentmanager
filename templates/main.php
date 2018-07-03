@@ -2,6 +2,7 @@
 // angular + components
 script('documentmanager', 'vendor/angular/angular.min');
 script('documentmanager', 'vendor/angular-route/angular-route.min');
+script('documentmanager', 'vendor/angular-cache/angular-cache.min');
 
 // compiled version of app javascript
 script('documentmanager', 'public/script');

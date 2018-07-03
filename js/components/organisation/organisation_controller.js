@@ -7,18 +7,18 @@ angular.module('documentManagerApp')
 	    };
 
 		ctrl.id = function() {
-			return ctrl.organisation.uniqueId;
+			return ctrl.organisation.id();
 		};
 
 		ctrl.name = function() {
-			return ctrl.organisation.name;
+			return ctrl.organisation.name();
 		};
 
 		ctrl.email = function() {
-			return ctrl.organisation.email;
+			return ctrl.organisation.email();
 		};
 
 		ctrl.url = function() {
-			return ctrl.organisation.url;
+			return ctrl.organisation.url();
 		};
 	});

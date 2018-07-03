@@ -1,4 +1,4 @@
-var app = angular.module('documentManagerApp', ['ngRoute']);
+var app = angular.module('documentManagerApp', ['ngRoute', 'angular-cache']);
 
 app.config(function($routeProvider) {
 
@@ -6,13 +6,13 @@ app.config(function($routeProvider) {
 		template: '<documentdetails></documentdetails>'
 	});
 
-	$routeProvider.when('/document/:uid', {
+	$routeProvider.when('/document/:id', {
 		redirectTo: function(parameters) {
 			return '/' + t('documents', 'All documents') + '/' + parameters.uid;
 		}
 	});
 
-	$routeProvider.when('/:gid/:uid', {
+	$routeProvider.when('/:gid/:id', {
 		template: '<documentdetails></documentdetails>'
 	});
 

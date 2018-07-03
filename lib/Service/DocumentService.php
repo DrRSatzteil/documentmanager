@@ -52,17 +52,16 @@ class DocumentService {
     }
 
     public function create(int $fileId, string $userId) {
-
-        	try {
-	        	$document = new Document();
-	    		$document->setFileId($fileId);
-	    		$document->setUserId($userId);
-	    		// Status 0 = Initial load
-	    		$document->setStatus(0);
-	    		return $this->mapper->insert($document);
-	    	} catch (Exception $e) {
-	    		$this->handleException($e);
-	    	}
+    	try {
+        	$document = new Document();
+    		$document->setFileId($fileId);
+    		$document->setUserId($userId);
+    		// Status 0 = Initial load
+    		$document->setStatus(0);
+    		return $this->mapper->insert($document);
+    	} catch (Exception $e) {
+    		$this->handleException($e);
+    	}
     }
 
     public function update(int $id, int $fileId, string $title, string $userId,

@@ -22,7 +22,6 @@ class DocumentController extends Controller {
 
     use Errors;
 
-	//TODO: Check if DataResponse needs to be created in a few methods
 	
     public function __construct($appName,
                                 IRequest $request,
@@ -76,7 +75,17 @@ class DocumentController extends Controller {
      * @NoAdminRequired
      */
     public function load(string $path): DataResponse {
-        return new DataResponse($this->discoveryService->discoverDocuments($path));
+    	return $this->handleNotFound(function () use ($path) {
+            return $this->discoveryService->discoverDocuments($path);
+        });
     }
-
+    
+    /**
+     * @NoAdminRequired
+     */
+    public function analyze(int $id): DataResponse {
+    	return $this->handleNotFound(function () use ($id) {
+            return $this->discoveryService->analyzeDocument($id);
+        });
+    }
 }

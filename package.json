@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "angular": "^1.7.2",
-    "angular-route": "^1.7.2"
+    "angular-route": "^1.7.2",
+    "angular-cache": "^4.6.0"
   }
 }

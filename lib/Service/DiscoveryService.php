@@ -1,25 +1,27 @@
 <?php
-
 namespace OCA\DocumentManager\Service;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 
 use OCA\DocumentManager\Database\Document;
 use OCA\DocumentManager\Service\Exception\DiscoveryFailedException;
+use OCA\DocumentManager\Service\DocumentService;
+use OCA\DocumentManager\Service\OrganisationService;
 
 class DiscoveryService {
     
     private $storage;
     private $parser;
     private $documentService;
-    private $pattern;
+    private $organisationService;
+    private $pattern = '/[A-Za-z0-9_-]+@[A-Za-z0-9_-]+\.([A-Za-z0-9_-][A-Za-z0-9_]+)/';
     private $userId;
 
-    public function __construct(\OCP\Files\IRootFolder $storage, $UserId, \OCA\DocumentManager\Service\DocumentService $documentService){
+    public function __construct(\OCP\Files\IRootFolder $storage, $UserId, DocumentService $documentService, OrganisationService $organisationService){
         $this->storage = $storage->getUserFolder($UserId);
         $this->documentService = $documentService;
+        $this->organisationService = $organisationService;
         $this->parser = new \Smalot\PdfParser\Parser();
-        $this->pattern = '/[A-Za-z0-9_-]+@[A-Za-z0-9_-]+\.([A-Za-z0-9_-][A-Za-z0-9_]+)/'; //regex for pattern of e-mail address
         $this->userId = $UserId;
     }
     
@@ -60,21 +62,59 @@ class DiscoveryService {
         return inserts;
     }
     
-    private function loadDocumentFile(\OCP\Files\File $file){
+    private function loadDocumentFile(\OCP\Files\File $file) {
     	return $this->documentService->create($file->getId(), $this->userId);
     }
     
-    private function extractDocumentData(\OCP\Files\File $file, array $documentData) {
-    	
-    	// Parse file
-    	$pdf = $this->parseFile($file);
-    	
-    	// Read Mail Adress
-    	/**$documentData['email'] = $this->extractMailAddress($pdf->getText());*/
-    	
-    	// Extract url from email
-    	//if ($email )
+    private function analyzeDocument(int $id) {
+    	$document = $this->documentService->find($id, $this->userId);
+    	try {
+            $file = $this->storage->getById($document->fileId);
+            if($file instanceof \OCP\Files\File) {
+            	$document->setTitle($file->getName());
+            	// Parse file
+    			$pdf = $this->parseFile($file);
+    			$organisation = $this->determineOrganisationDetails($pdf->getPages()[0].getText());
+    			$this->determineDocumentDetails($pdf, $document, $organisation);
+    			return [$document, $organisation];
+            } else {
+            	throw new NotFoundException("Document file not found.");
+            }
+        } catch(Exception $e) {
+            $this->handleException($e);
+        }
+    }
     
+    private function determineDocumentDetails($pdf, $document, $organisation) {
+    	$details = $pdf->getDetails();
+    	if(isset($details['CreationDate'])) {
+    		$document->setCreationDate($details['CreationDate']);
+    	}
+    	if(isset($organisation)) {
+    		$document->setOrganisationId($organisation->getId());
+    	}
+    }
+    
+    private function determineOrganisationDetails($pdfText) {
+    	$email = $this->extractMailAddress($pdfText);
+    	$url;
+    	$organisation;
+    	
+    	if(isset($email)) {
+    		$url = substr(strrchr($email, "@"), 1);
+    	}
+    	if(isset($url)) {
+    		try {
+    			$organisation = $this->organisationService->findByUrl($url, $this->userId);
+    			// Don't change anything if the organisation already exists
+    		} catch (Exception $e) {
+    			// No need to do anything
+    		}
+    	}
+    	if($organisation === NULL) {
+    		$organisation = $this->organisationService->create($url, NULL, $email, $url, $this->userId);
+    	}
+    	return $organisation;
     }
     
     private function parseFile(\OCP\Files\File $file) {
@@ -87,27 +127,25 @@ class DiscoveryService {
     
     private function extractMailAddress(String $pdfText) {
         try {
-            $matches = mailparse_rfc822_parse_addresses($pdfText);
+            $matches = [];
+            preg_match_all($this->pattern, $pdfText, $matches);
             
-            if ($matches.length > 0) {
-            	return $matches[0]['address'];
+            if (count($matches) > 0) {
                 // Now we need to guess which mail adress leads us to the sender of the document.
                 // We assume that the mail adress we found most times is the one we are looking for
                 // If we find more than one adress we'll just randomly pick one for now
-                /**$merged_matches = array();
-                foreach ($matches as $matcharray) {
-                	array_merge($merged_matches, array_count_values($matcharray));
-                }
                 // Now find the entry with the highest count
-                $highest_count = 0;
-                $highest_count_value;
-                foreach ($merged_matches as $match => $count) {
-                	if ($count > $highest_count) {
-                		$highest_count_value = $match;
-                		$highest_count = $count;
+                $matchCount = [];
+                foreach ($matches[0] as $match) {
+                	if(isset($matchCount[$match])){
+                		$matchCount[$match] = $matchCount[$match] + 1;
+                	}
+                	else {
+                		$matchCount[$match] = 1;
                 	}
                 }
-                return $highest_count_value;*/
+                arsort($matchCount);
+                return $matchCount[0][0];
 	        }
         } catch(Exception $e) {
             $this->handleException($e);

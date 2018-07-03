@@ -3,6 +3,14 @@
     "angular": [
       "node_modules/angular/angular*.js",
       "node_modules/angular/angular.min.js.map"
+    ],
+    "angular-cache": [
+      "node_modules/angular-cache/dist/*.js",
+      "node_modules/angular-cache/dist/angular-cache.*.map"
+    ],
+    "angular-route": [
+      "node_modules/angular-route/*.js",
+      "node_modules/angular-route/*.map"
     ]
   }
 }
