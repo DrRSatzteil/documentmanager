@@ -1,5 +1,7 @@
+/*globals OC angular t*/
+/*eslint-env meteor */
 angular.module('documentManagerApp')
-	.controller('loadDocumentsButtonCtrl', function($http, DocumentService) {
+	.controller('loadDocumentsButtonCtrl', function(DocumentService) {
 		var ctrl = this;
 		ctrl.t = {
 			loadDocuments : t('documentmanager', 'Load document(s)')
