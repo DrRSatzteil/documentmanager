@@ -18,6 +18,16 @@ angular.module('documentManagerApp')
 			});
 		};
 
+		var addDocument = function(documentProperties) {
+			var doc = new Document(documentProperties);
+			documentCache.put(doc.id(), doc);
+		};
+
+		var addOrganisation = function(organisationProperties) {
+			var organisation = new Organisation(organisationProperties);
+			organisationCache.put(organisation.id(), organisation);
+		};
+
 		var fillDocumentCache = function() {
 			return $http.get(OC.generateUrl('/apps/documentmanager/documents')).then(function(response) {
 				response.data.forEach(function(documentProperties) {
@@ -54,16 +64,6 @@ angular.module('documentManagerApp')
 			} else {
 				return $q.when(organisationCache.values());
 			}
-		};
-
-		var addDocument = function(documentProperties) {
-			var document = new Document(documentProperties);
-			documentCache.put(document.id(), document);
-		};
-
-		var addOrganisation = function(organisationProperties) {
-			var organisation = new Organisation(organisationProperties);
-			organisationCache.put(organisation.id(), organisation);
 		};
 
 		// TODO: Do not return http response but add documents and organisations to cache and return both; Server also needs to return both
