@@ -1,82 +1,92 @@
+/*globals angular*/
 angular.module('documentManagerApp')
 	.factory('Organisation', function() {
 		return function Organisation(organisationData) {
-
 			angular.extend(this, {
 
-				data: {},
+				props: {},
 
 				id: function(value) {
-					var model = this;
 					if (angular.isDefined(value)) {
 						// setter
-						return model.setProperty('id', { value: value });
+						return this.setProperty('id', { value: value.toString() });
 					} else {
 						// getter
-						return model.getProperty('id').value;
+						var property = this.getProperty('id');
+						if (property) {
+							return property.value[0];
+						} else {
+							return undefined;
+						}
 					}
 				},
 
 				name: function(value) {
-					var model = this;
 					if (angular.isDefined(value)) {
 						// setter
-						return model.setProperty('name', { value: value });
+						return this.setProperty('name', { value: value });
 					} else {
 						// getter
-						return model.getProperty('name').value;
-					}
-				},
-
-				logo: function(value) {
-					var model = this;
-					if (angular.isDefined(value)) {
-						// setter
-						return model.setProperty('logo', { value: value });
-					} else {
-						// getter
-						return model.getProperty('logo').value;
-					}
-				},
-
-				logoDate: function(value) {
-					var model = this;
-					if (angular.isDefined(value)) {
-						// setter
-						return model.setProperty('logo_date', { value: value });
-					} else {
-						// getter
-						return model.getProperty('logo_date').value;
+						var property = this.getProperty('name');
+						if (property) {
+							return property.value[0];
+						} else {
+							return undefined;
+						}
 					}
 				},
 
 				email: function(value) {
-					var model = this;
 					if (angular.isDefined(value)) {
 						// setter
-						return model.setProperty('email', { value: value });
+						return this.setProperty('email', { value: value });
 					} else {
 						// getter
-						return model.getProperty('email').value;
+						var property = this.getProperty('email');
+						if (property) {
+							return property.value[0];
+						} else {
+							return undefined;
+						}
 					}
 				},
 
 				url: function(value) {
-					var model = this;
 					if (angular.isDefined(value)) {
 						// setter
-						return model.setProperty('url', { value: value });
+						return this.setProperty('url', { value: value });
 					} else {
 						// getter
-						return model.getProperty('url').value;
+						var property = this.getProperty('url');
+						if (property) {
+							return property.value[0];
+						} else {
+							return undefined;
+						}
 					}
-				}
+				},
 
+				getProperty: function(propertyName) {
+					if (this.props[propertyName]) {
+						return this.props[propertyName][0];
+					} else {
+						return undefined;
+					}
+				},
+
+				setProperty: function(propertyName, data) {
+					if(!this.props[propertyName]) {
+						this.props[propertyName] = [];
+					}
+					this.props[propertyName][0] = data;
+				}
 			});
 
 			if(angular.isDefined(organisationData)) {
-				angular.extend(this.data, organisationData);
+				this.id(organisationData.id);
+				this.name(organisationData.name);
+				this.email(organisationData.email);
+				this.url(organisationData.url);
 			}
-
 		};
 	});

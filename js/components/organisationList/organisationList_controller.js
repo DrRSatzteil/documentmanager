@@ -3,12 +3,12 @@ angular.module('documentManagerApp')
 		var ctrl = this;
 		ctrl.organisations = [];
 		DocumentService.register(function(ev) {
-		    if (ev.event === 'imported') {
-				// TODO: Better only get the imported documents from the event. org list is not yet updated
+		    if (ev.event === 'updatedOrganisation') {
+				// TODO: Better only use the imported document from the event. org list is not yet updated
 				DocumentService.getAllOrganisations(ctrl.organisations);
 			}
 			if (ev.event === 'imported') {
-				// TODO: Better only get the imported documents from the event. org list is not yet updated
+				// TODO: We need to check if we have a non initialized document here to show in the dummy org
 				DocumentService.getAllOrganisations(ctrl.organisations);
 			}
 		});

@@ -45,19 +45,16 @@ class OrganisationService {
     
     public function findByUrl($url, $userId) {
         try {
-            return $this->mapper->findByUrl($url, $userId);
+            return $this->mapper->findByUrl($url, $userId)[0];
         } catch(Exception $e) {
             $this->handleException($e);
         }
     }
     
-    public function create(string $name, string $logo, string $email, string $url, string $userId) {
+    public function create(string $name, string $email, string $url, string $userId) {
     	try {
         	$organisation = new Organisation();
     		$organisation->setName($name);
-    		$organisation->setLogo($logo);
-    		// TODO: Only set when logo was set
-    		$organisation->setLogoDate(new \DateTime());
     		$organisation->setName($email);
     		$organisation->setLogo($url);
     		return $this->mapper->insert($organisation);
@@ -66,15 +63,11 @@ class OrganisationService {
     	}
     }
 
-    public function update(int $name, string $logo, string $email, string $url, string $userId) {
+    public function update(int $name, string $email, string $url, string $userId) {
 		try {
             $organisation = $this->mapper->find($id, $userId);
     		$organisation->setName($name);
-    		$organisation->setLogo($logo);
-    		// TODO: Only set when logo was changed
-    		$organisation->setLogoDate(new \DateTime());
     		$organisation->setName($email);
-    		$organisation->setLogo($url);
          	return $this->mapper->update($organisation);
          } catch(Exception $e) {
              $this->handleException($e);

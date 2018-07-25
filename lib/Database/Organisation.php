@@ -7,7 +7,6 @@ use OCP\AppFramework\Db\Entity;
 
 class Organisation extends Entity implements JsonSerializable {
 
-    protected $fileId;
     protected $name;
     protected $logo;
     protected $logoDate;

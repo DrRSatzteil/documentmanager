@@ -1,6 +1,6 @@
 /*globals OC angular*/
 angular.module('documentManagerApp')
-	.factory('DocumentService', function($q, $http, Organisation, Document, CacheFactory) {
+	.factory('DocumentService', function($q, $http, Organisation, NextcloudDocument, CacheFactory) {
 
 		var observerCallbacks = [];
 		var documentCacheFilled = false;
@@ -19,13 +19,15 @@ angular.module('documentManagerApp')
 		};
 
 		var addDocument = function(documentProperties) {
-			var doc = new Document(documentProperties);
+			var doc = new NextcloudDocument(documentProperties);
 			documentCache.put(doc.id(), doc);
+			return doc;
 		};
 
 		var addOrganisation = function(organisationProperties) {
 			var organisation = new Organisation(organisationProperties);
 			organisationCache.put(organisation.id(), organisation);
+			return organisation;
 		};
 
 		var fillDocumentCache = function() {
@@ -66,13 +68,18 @@ angular.module('documentManagerApp')
 			}
 		};
 
-		// TODO: Do not return http response but add documents and organisations to cache and return both; Server also needs to return both
-		var load = function(request) {
-		    return $http.post(OC.generateUrl('/apps/documentmanager/load'), JSON.stringify(request));
+		var load = function(path) {
+		    var loadRequest = {
+				path: path
+			};
+		    return $http.post(OC.generateUrl('/apps/documentmanager/load'), JSON.stringify(loadRequest));
 		};
 
-		var analyze = function(request) {
-		    return $http.post(OC.generateUrl('/apps/documentmanager/analyze'), JSON.stringify(request));
+		var analyze = function(documentId) {
+		    var analyzeRequest = {
+				id: documentId
+			};
+		    return $http.post(OC.generateUrl('/apps/documentmanager/analyze'), JSON.stringify(analyzeRequest));
 		};
 
 		return {
@@ -89,22 +96,17 @@ angular.module('documentManagerApp')
 				});
 			},
 
-			// TODO: Return new Document and Organisation objects in separate events
 			loadDocuments: function(path) {
-				var loadrequest = {
-					path: path
-				};
-				load(loadrequest).then(function (response) {
-					// TODO: Add loaded documents to cache
-					notifyObservers('imported', response);
-
-					// TODO: Extend API to take more than one key at a time
-					var analyzeRequest = {
-						id: response[0]['id']
-					};
-					analyze(analyzeRequest).then(function (response) {
-						// TODO: Update documents in cache
-						notifyObservers('analyzed', response);
+				load(path).then(function(response) {
+					response.data.forEach(function(documentProperties) {
+						var doc = addDocument(documentProperties);
+						notifyObservers('imported', doc);
+						analyze(doc.id()).then(function(response) {
+					        var doc = addDocument(response.data[0]);
+							var organisation = addOrganisation(response.data[1]);
+							notifyObservers('updatedDocument', doc);
+							notifyObservers('updatedOrganisation', organisation);
+						});
 					});
 				});
 			},

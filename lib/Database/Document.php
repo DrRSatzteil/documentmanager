@@ -17,7 +17,7 @@ class Document extends Entity implements JsonSerializable {
     public function jsonSerialize(): array {
         return [
             'id' => $this->id,
-            'fileid' => $this->fileId,
+            'fileId' => $this->fileId,
 			'title' => $this->title,
 			'userId' => $this->userId,
 			'organisationId' => $this->organisationId,

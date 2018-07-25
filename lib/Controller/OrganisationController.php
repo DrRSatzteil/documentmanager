@@ -10,7 +10,7 @@ use OCA\DocumentManager\Service\OrganisationService;
 
 class OrganisationController extends Controller {
 
-	/** @var DocumentService */
+	/** @var OrganisationService */
 	private $organisationService;
 
 	/** @var string */
@@ -20,7 +20,7 @@ class OrganisationController extends Controller {
 
 	public function __construct($appName,
                                 IRequest $request,
-                                OrganisationService $organisationService,
+                                \OCA\DocumentManager\Service\OrganisationService $organisationService,
                                 $userId) {
         parent::__construct($appName, $request);
         $this->organisationService = $organisationService;

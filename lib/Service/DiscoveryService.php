@@ -66,15 +66,15 @@ class DiscoveryService {
     	return $this->documentService->create($file->getId(), $this->userId);
     }
     
-    private function analyzeDocument(int $id) {
+    public function analyzeDocument(int $id) {
     	$document = $this->documentService->find($id, $this->userId);
     	try {
-            $file = $this->storage->getById($document->fileId);
+            $file = $this->storage->getById($document->getFileId())[0];
             if($file instanceof \OCP\Files\File) {
             	$document->setTitle($file->getName());
             	// Parse file
     			$pdf = $this->parseFile($file);
-    			$organisation = $this->determineOrganisationDetails($pdf->getPages()[0].getText());
+    			$organisation = $this->determineOrganisationDetails($pdf->getText());
     			$this->determineDocumentDetails($pdf, $document, $organisation);
     			return [$document, $organisation];
             } else {
@@ -98,10 +98,12 @@ class DiscoveryService {
     private function determineOrganisationDetails($pdfText) {
     	$email = $this->extractMailAddress($pdfText);
     	$url;
+    	$name;
     	$organisation;
     	
     	if(isset($email)) {
     		$url = substr(strrchr($email, "@"), 1);
+    		$name = substr($url, 0, strrpos($url, "."));
     	}
     	if(isset($url)) {
     		try {
@@ -112,7 +114,7 @@ class DiscoveryService {
     		}
     	}
     	if($organisation === NULL) {
-    		$organisation = $this->organisationService->create($url, NULL, $email, $url, $this->userId);
+    		$organisation = $this->organisationService->create($name, $email, $url, $this->userId);
     	}
     	return $organisation;
     }
@@ -145,7 +147,8 @@ class DiscoveryService {
                 	}
                 }
                 arsort($matchCount);
-                return $matchCount[0][0];
+                reset($matchCount);
+                return key($matchCount);
 	        }
         } catch(Exception $e) {
             $this->handleException($e);

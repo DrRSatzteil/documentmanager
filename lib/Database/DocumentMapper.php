@@ -1,12 +1,12 @@
 <?php
 namespace OCA\DocumentManager\Database;
 
-use OCP\IDBConnection;
+use OCP\IDbConnection;
 use OCP\AppFramework\Db\Mapper;
 
 class DocumentMapper extends Mapper {
 
-    public function __construct(IDBConnection $db) {
+    public function __construct(IDbConnection $db) {
         parent::__construct($db, 'document', '\OCA\DocumentManager\Database\Document');
     }
 
